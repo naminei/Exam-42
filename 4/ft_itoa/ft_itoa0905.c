@@ -5,76 +5,77 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: exam <marvin@42.fr>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/05/02 10:21:54 by exam              #+#    #+#             */
-/*   Updated: 2017/05/09 13:06:25 by nozanne          ###   ########.fr       */
+/*   Created: 2017/05/09 10:07:41 by exam              #+#    #+#             */
+/*   Updated: 2017/05/30 12:23:06 by nozanne          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-int	int_len(int nbr, int x)
+int		lenw(int nbr)
 {
+	int len;
+
+	len = 1;
 	if (nbr < 0)
 	{
-		x++;
+		len++;
 		nbr = -nbr;
 	}
-	if (nbr > 9)
+	while (nbr / 10 > 0)
 	{
-		x++;
+		len++;
 		nbr = nbr / 10;
-		return (int_len(nbr, x));
 	}
-	return (x);
-}
-
-char *ft_itoa(int nbr)
+	return (len);
+}	
+		
+char	*ft_itoa(int nbr)
 {
-	char *str;
-	int i;
 	int len;
+	char *x;
+	int i;
 	int count;
-
+	
 	i = 0;
 	count = 1;
-	len = int_len(nbr, 1);
-	if (len == 1 || (len == 2 && nbr < 0))
-		count = 1;
-	else if (nbr < 0)
-	{
-		while (len - 1 > 1)
-		{
-			count = count * 10;
-			len--;
-		}
-	}
-	else
-	{
-		while (len > 1)
-		{
-			count = count * 10;
-			len--;
-		}
-	}
-	if (!(str = (char*)malloc(sizeof(char) * (len + 1))))
+	len = lenw(nbr);
+	if (!(x = (char*)malloc(sizeof(char)*(len + 1))))
 		return (NULL);
-	if (nbr == -2147483648)
-		return ("-2147483648");
 	if (nbr < 0)
 	{
+		if (nbr == -2147483648)
+		{
+			x = "-2147483648";
+			return (x);
+		}
+		len--;
+		x[0] = '-';
+		i++;
 		nbr = -nbr;
-		str[i] = '-';
-		i++;
 	}
-	while (count != 1)
+	if (len == 1)
 	{
-		str[i] = nbr / count + 48;
-		nbr = nbr % count;;
+		x[i] = 48 + nbr;
+		return (x);
+	}
+	while (len > 1)
+	{
+		count = count * 10;
+		len--;
+	}
+	while (nbr > 9)
+	{
+		x[i] = 48 + nbr / count;
+		i++;
+		nbr = nbr % count;
 		count = count / 10;
+	}
+	if (nbr <= 9)
+	{
+		x[i] = 48 + nbr;
 		i++;
 	}
-	str[i] = nbr % 10 + 48;
-	i++;
-	str[i] = '\0';
-	return (str);
+	x[i] = '\0';
+	return (x);
 }
